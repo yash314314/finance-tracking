@@ -32,7 +32,7 @@ const TransactionSchema = new mongoose.Schema({
   },
 });
 
-
+// Avoid model overwrite issues in dev
 const Transaction = mongoose.models.Transaction || mongoose.model('Transaction', TransactionSchema);
 
 export default Transaction;
