@@ -1,5 +1,5 @@
-
-const mongoose = require('mongoose');
+// lib/mongodb.js
+import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
@@ -15,22 +15,22 @@ if (!cached) {
 
 async function dbConnect() {
   if (cached.conn) {
-    console.log('Using existing MongoDB connection.'); 
+    console.log('Using existing MongoDB connection.');
     return cached.conn;
   }
 
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
-     
     };
     cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
-      console.log('New MongoDB connection established.'); 
+      console.log('New MongoDB connection established.');
       return mongoose;
     });
   }
+
   cached.conn = await cached.promise;
   return cached.conn;
 }
 
-module.exports = dbConnect; 
+export default dbConnect;

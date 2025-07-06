@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+
 import { TransactionForm } from '../components/ui/transaction-form';
 import { TransactionList } from '../components/ui/transaction-list';
 import { MonthlyExpensesChart } from '../components/ui/monthly-expenses-chart';
 import { CategoryPieChart } from '../components/ui/category-pie-chart';
+import { SummaryCards } from '../components/ui/summary-cards';
 
 const getAnimationDelay = (index) => `${200 * index}ms`;
 
@@ -39,13 +41,7 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const [isMessageBoxOpen, setIsMessageBoxOpen] = useState(false);
-  const [messageBoxContent, setMessageBoxContent] = useState({
-    title: '',
-    message: '',
-    type: 'info',
-    isForm: false,
-    initialFormData: null,
-  });
+  const [messageBoxContent, setMessageBoxContent] = useState({ title: '', message: '', type: 'info', isForm: false, initialFormData: null });
   const [isMounted, setIsMounted] = useState(false);
 
   const showMessage = useCallback((title, message, type = 'info', isForm = false, initialFormData = null) => {
@@ -71,6 +67,7 @@ export default function DashboardPage() {
       setTransactions(data);
     } catch (err) {
       setErrorMessage(err.message || 'Failed to load data.');
+      console.error('Fetch error:', err);
     } finally {
       setIsLoading(false);
       setIsMounted(true);
@@ -101,6 +98,7 @@ export default function DashboardPage() {
     showMessage('Edit Transaction', null, 'info', true, transaction);
   }, [showMessage]);
 
+
   if (isLoading) {
     return (
       <main className="min-h-screen bg-zinc-900 text-zinc-100 flex items-center justify-center p-4">
@@ -120,6 +118,8 @@ export default function DashboardPage() {
         >
           My Dashboard
         </h1>
+
+        <SummaryCards transactions={transactions} />
 
         <div
           className={`bg-zinc-800 p-6 rounded-lg shadow-xl mb-8 border border-zinc-700 ${

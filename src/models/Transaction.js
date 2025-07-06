@@ -1,5 +1,5 @@
-
-const mongoose = require('mongoose');
+// models/Transaction.js
+import mongoose from 'mongoose';
 
 const TransactionSchema = new mongoose.Schema({
   amount: {
@@ -16,15 +16,15 @@ const TransactionSchema = new mongoose.Schema({
     trim: true,
     maxlength: [50, 'Description can not be more than 50 characters'],
   },
-  category: { 
+  category: {
     type: String,
     required: [true, 'Please add a category'],
   },
-  type: { 
+  type: {
     type: String,
-    enum: ['expense', 'income'], 
-    required: [true, 'Please specify transaction type (expense/income)'],
-    default: 'expense', 
+    enum: ['expense', 'income'],
+    required: [true, 'Please specify transaction type'],
+    default: 'expense',
   },
   createdAt: {
     type: Date,
@@ -32,5 +32,7 @@ const TransactionSchema = new mongoose.Schema({
   },
 });
 
+// Avoid model overwrite issues in dev
+const Transaction = mongoose.models.Transaction || mongoose.model('Transaction', TransactionSchema);
 
-module.exports = mongoose.models.Transaction || mongoose.model('Transaction', TransactionSchema);
+export default Transaction;
